@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Schedule Table</title>
+    <link rel="stylesheet" href="schedule_styles.css">
+</head>
+
+<body>
+    <div class="side-menu">
+        <a href="#" class="menu-item">
+            <i>🏠</i>Home
+        </a>
+        <a href="#" class="menu-item">
+            <i>⚙️</i>Settings
+        </a>
+        <a href="#" class="menu-item">
+            <i>📊</i>Leads
+        </a>
+        <a href="#" class="menu-item">
+            <i>📦</i>Inventory
+        </a>
+        <a href="#" class="menu-item">
+            <i>📈</i>Reports
+        </a>
+        <a href="#" class="menu-item">
+            <i>📋</i>Jobs
+        </a>
+        <a href="#" class="menu-item">
+            <i>📱</i>Mobile View
+        </a>
+        <a href="#" class="menu-item">
+            <i>🎫</i>Tickets
+        </a>
+        <a href="#" class="menu-item">
+            <i>📞</i>CallTrak
+        </a>
+        <a href="#" class="menu-item">
+            <i>📊</i>Sales Dashboard
+        </a>
+        <a href="#" class="menu-item">
+            <i>👥</i>Customers
+        </a>
+        <a href="#" class="menu-item">
+            <i>🔄</i>Workflow
+        </a>
+        <a href="#" class="menu-item">
+            <i>📋</i>Projects
+        </a>
+        <a href="#" class="menu-item">
+            <i>📥</i>Incoming Documents
+        </a>
+        <a href="#" class="menu-item">
+            <i>💰</i>Price Check
+        </a>
+        <a href="#" class="menu-item">
+            <i>📄</i>Documents
+        </a>
+        <a href="#" class="menu-item">
+            <i>📅</i>Calendar
+        </a>
+        <a href="#" class="menu-item">
+            <i>🔧</i>Utilities
+        </a>
+        <a href="#" class="menu-item">
+            <i>📅</i>Schedule
+        </a>
+        <a href="#" class="menu-item">
+            <i>📝</i>To-Do
+        </a>
+        <a href="#" class="menu-item">
+            <i>🎫</i>Tickets Dashboard
+        </a>
+        <a href="#" class="menu-item">
+            <i>⏱️</i>Timesheets
+        </a>
+        <a href="#" class="menu-item">
+            <i>🖥️</i>Conference Mode
+        </a>
+        <hr style="margin: 10px 0; border-top: 1px solid #dee2e6;">
+        <a href="#" class="menu-item">
+            <i>❓</i>Support Centre
+        </a>
+        <a href="#" class="menu-item">
+            <i>❔</i>Help With This Page
+        </a>
+    </div>
+    <div class="main-content">
+        <div class="controls">
+            <label>
+                <input type="checkbox" id="showDetail" checked>
+                Show more detail for each job
+            </label>
+        </div>
+        <div class="schedule-container" id="schedule"></div>
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+
+    <script>
+        let jobs = {};
+        let techColors = {};
+        let technicians = [];
+        let fullTechList = [];
+        let shortTechList = [];
+        let showJobDetail = true;
+
+        fetch('job.dat')
+            .then(response => response.json())
+            .then(data => {
+                jobs = data.jobs;
+                techColors = data.techColors;
+                fullTechList = data.fullTechList;
+                shortTechList = data.shortTechList;
+                technicians = fullTechList;
+                generateSchedule();
+            })
+            .catch(error => console.error('Error loading job data:', error));
+
+        // Add keyboard event listener
+        document.addEventListener('keydown', function (event) {
+            if (event.key.toLowerCase() === 't') {
+                technicians = technicians === fullTechList ? shortTechList : fullTechList;
+                generateSchedule();
+            }
+        });
+
+        // Add event listener for checkbox
+        document.getElementById('showDetail').addEventListener('change', function (e) {
+            showJobDetail = e.target.checked;
+            generateSchedule();
+        });
+
+        function generateSchedule() {
+            const schedule = document.getElementById("schedule");
+            schedule.innerHTML = "";
+
+            // Fixed measurements
+            const WORK_DAY_HOURS = 8;
+            const HOUR_HEIGHT = 70;
+            const HEADER_HEIGHT = 45;
+            const CONTENT_PADDING = 5;
+
+            // Total height calculation
+            const WORK_AREA_HEIGHT = WORK_DAY_HOURS * HOUR_HEIGHT;  // 8 hours * 70px = 560px
+            const TOTAL_HEIGHT = WORK_AREA_HEIGHT + HEADER_HEIGHT + (CONTENT_PADDING * 2);
+
+            technicians.forEach((tech) => {
+                const column = document.createElement("div");
+                column.classList.add("column");
+                column.setAttribute("ondrop", "drop(event)");
+                column.setAttribute("ondragover", "allowDrop(event)");
+                column.setAttribute("ondragenter", "highlightDropZone(event)");
+                column.setAttribute("ondragleave", "unhighlightDropZone(event)");
+                column.dataset.technician = tech;
+
+                // Calculate total hours for technician
+                const totalHours = jobs[tech]?.reduce((sum, job) => sum + job.duration, 0) || 0;
+                const progressPercentage = (totalHours / WORK_DAY_HOURS) * 100;
+
+                if (tech === "Unallocated") {
+                    column.innerHTML = `
+                        <div class='column-header'>
+                            ${tech}
+                        </div>
+                    `;
+                } else {
+                    column.innerHTML = `
+                        <div class='column-header'>
+                            ${tech}
+                            <div class='progress-bar'>
+                                <div class='progress-bar-fill' style='width: ${progressPercentage}%;'></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                column.style.height = `${TOTAL_HEIGHT}px`;
+
+                if (jobs[tech]) {
+                    const jobsContainer = document.createElement("div");
+                    jobsContainer.classList.add('jobs-container');
+                    jobsContainer.style.padding = `${CONTENT_PADDING}px`;
+                    jobsContainer.style.height = `${WORK_AREA_HEIGHT}px`;
+                    jobsContainer.style.display = 'flex';
+                    jobsContainer.style.flexDirection = 'column';
+                    jobsContainer.style.gap = '3px';
+
+                    jobs[tech].forEach((job) =>
+                        jobsContainer.appendChild(createJobElement(job, HOUR_HEIGHT))
+                    );
+                    column.appendChild(jobsContainer);
+                }
+
+                schedule.appendChild(column);
+            });
+        }
+
+        function createJobElement(job, hourHeight) {
+            const jobElement = document.createElement("div");
+            jobElement.classList.add("job");
+            jobElement.setAttribute("draggable", "true");
+            jobElement.setAttribute("ondragstart", "drag(event)");
+            jobElement.setAttribute("id", job.id);
+
+            // Calculate base height from duration
+            const baseHeight = job.duration * hourHeight;
+
+            // Add padding for content
+            const extraPadding = showJobDetail ? 15 : 10;
+            jobElement.style.height = `${baseHeight + extraPadding}px`;
+
+            // Modify the innerHTML based on showJobDetail
+            jobElement.innerHTML = `
+                <div class="job-id">${job.id}</div>
+                <div class="job-time">@${job.start}</div>
+                <div class="job-duration">(${job.duration}h)</div>
+                ${showJobDetail ? `
+                    <div class="job-customer">${job.customer}</div>
+                    <div class="job-description">${job.description}</div>
+                ` : ''}
+            `;
+
+            // Check if description overflows and add class if it does
+            if (showJobDetail) {
+                setTimeout(() => {
+                    const descriptionEl = jobElement.querySelector('.job-description');
+                    if (descriptionEl.scrollHeight > descriptionEl.clientHeight) {
+                        jobElement.classList.add('overflow');
+                    }
+                }, 0);
+            }
+
+            jobElement.addEventListener("mouseover", (e) => showTooltip(e, job));
+            jobElement.addEventListener("mouseout", hideTooltip);
+            return jobElement;
+        }
+
+        function showTooltip(event, job) {
+            const tooltip = document.getElementById("tooltip");
+            tooltip.innerHTML = `<div class="tooltip-header">Customer: ${job.customer}</div><strong>Time Added:</strong> ${job.added}<br><strong>Job Address:</strong> ${job.address}<br><strong>Job Type:</strong> Service Request<br><strong>Job Status:</strong> Booked<br><strong>Job Description:</strong> ${job.description}`;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        }
+
+        function hideTooltip() {
+            document.getElementById("tooltip").style.display = "none";
+        }
+
+        function drag(event) {
+            hideTooltip();
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const jobId = event.dataTransfer.getData("text");
+            const jobElement = document.getElementById(jobId);
+            const newColumn = event.target.closest(".column");
+            if (!newColumn) return;
+
+            // Remove drag-over class
+            newColumn.classList.remove("drag-over");
+
+            // Find or create jobsContainer in the new column
+            let jobsContainer = newColumn.querySelector('.jobs-container');
+            if (!jobsContainer) {
+                jobsContainer = document.createElement("div");
+                jobsContainer.classList.add('jobs-container');
+                jobsContainer.style.padding = `5px`;
+                jobsContainer.style.height = `560px`;
+                jobsContainer.style.display = 'flex';
+                jobsContainer.style.flexDirection = 'column';
+                jobsContainer.style.gap = '3px';
+                newColumn.appendChild(jobsContainer);
+            }
+
+            // Add the job to the container
+            jobsContainer.appendChild(jobElement);
+        }
+
+        function highlightDropZone(event) {
+            event.preventDefault();
+            const column = event.target.closest(".column");
+            if (column) {
+                column.classList.add("drag-over");
+            }
+        }
+
+        function unhighlightDropZone(event) {
+            const column = event.target.closest(".column");
+            if (column) {
+                column.classList.remove("drag-over");
+            }
+        }
+    </script>
+</body>
+
+</html>

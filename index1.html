@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Schedule Table</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        overflow-x: auto;
+      }
+      .schedule-container {
+        display: flex;
+        width: 100vw;
+      }
+      .column {
+        flex: 1;
+        border: 1px solid #ccc;
+        min-width: 150px;
+        max-width: 300px;
+        background: #f4f4f4;
+        padding: 5px;
+      }
+      .column-header {
+        background: #2c3e50;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        position: relative;
+      }
+      .progress-bar {
+        width: 100%;
+        height: 5px;
+        background: #555;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: #4caf50;
+      }
+      .job {
+        background: #dce6f1;
+        margin: 5px;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 11px;
+        cursor: grab;
+        min-height: 30px;
+        position: relative;
+      }
+      .job:active {
+        cursor: grabbing;
+      }
+
+      /* Updated Tooltip Styling */
+      .tooltip {
+        display: none;
+        position: absolute;
+        background: #f0f0f0; /* Light grey background for content */
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-size: 12px;
+        width: 300px;
+        border-radius: 5px;
+      }
+      .tooltip .tooltip-header {
+        background: #d3d3d3; /* Grey background for title */
+        font-weight: bold;
+        padding: 8px;
+        margin: -10px -10px 10px -10px;
+        border-bottom: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="schedule-container" id="schedule">
+      <!-- Columns will be dynamically added here -->
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+      const technicians = [
+        "Alice",
+        "Bob",
+        "Charlie",
+        "Diana",
+        "Ethan",
+        "Fiona",
+        "George",
+        "Hannah",
+        "Isaac",
+      ];
+
+      const jobs = [
+        {
+          id: "JB1401",
+          start: "07:00",
+          duration: 2,
+          customer: "Acme Corp",
+          added: "01/02/2025 11:04",
+          address: "12 Smith St, Sydney, NSW",
+          description: "Install a new VoIP phone system for a small business.",
+        },
+        {
+          id: "JB1402",
+          start: "09:00",
+          duration: 3,
+          customer: "Beta Ltd",
+          added: "02/02/2025 14:20",
+          address: "34 King St, Melbourne, VIC",
+          description: "Repair a faulty network switch in the main office.",
+        },
+        {
+          id: "JB1403",
+          start: "11:00",
+          duration: 1,
+          customer: "Gamma Industries",
+          added: "03/02/2025 09:15",
+          address: "56 Queen Rd, Brisbane, QLD",
+          description:
+            "Replace a damaged fibre-optic cable for high-speed internet.",
+        },
+        {
+          id: "JB1404",
+          start: "08:00",
+          duration: 4,
+          customer: "Delta Solutions",
+          added: "04/02/2025 16:45",
+          address: "78 York Ave, Perth, WA",
+          description: "Set up a secure Wi-Fi network for a corporate client.",
+        },
+        {
+          id: "JB1405",
+          start: "10:00",
+          duration: 2,
+          customer: "Epsilon Co.",
+          added: "05/02/2025 10:30",
+          address: "90 George St, Adelaide, SA",
+          description: "Upgrade a PBX telephone system for an office block.",
+        },
+      ];
+
+      function generateSchedule() {
+        const schedule = document.getElementById("schedule");
+        schedule.innerHTML = "";
+        const totalColumns = 10;
+
+        for (let i = 0; i < totalColumns; i++) {
+          const column = document.createElement("div");
+          column.classList.add("column");
+          column.setAttribute("ondrop", "drop(event)");
+          column.setAttribute("ondragover", "allowDrop(event)");
+
+          let totalHours = 0;
+          let assignedJobs = [];
+
+          while (totalHours < 8) {
+            let job = jobs[Math.floor(Math.random() * jobs.length)];
+            if (totalHours + job.duration <= 8) {
+              totalHours += job.duration;
+              assignedJobs.push(job);
+            }
+          }
+
+          let utilisation = i < 9 ? (totalHours / 8) * 100 : 0;
+
+          column.innerHTML = `
+          <div class='column-header'>
+            ${i < 9 ? technicians[i] : "Unallocated"}
+            ${
+              i < 9
+                ? `<div class='progress-bar'>
+                    <div class='progress-bar-fill' style='width: ${utilisation}%;'></div>
+                  </div>`
+                : ""
+            }
+          </div>
+        `;
+
+          assignedJobs.forEach((job) => {
+            const jobElement = document.createElement("div");
+            jobElement.classList.add("job");
+            jobElement.setAttribute("draggable", "true");
+            jobElement.setAttribute("ondragstart", "drag(event)");
+            jobElement.setAttribute("id", job.id);
+            jobElement.style.height = `${30 * job.duration}px`;
+            jobElement.innerHTML = `<strong>${job.id}</strong> @ ${job.start} (${job.duration}h)<br>${job.customer}`;
+            jobElement.addEventListener("mouseover", (e) =>
+              showTooltip(e, job)
+            );
+            jobElement.addEventListener("mouseout", hideTooltip);
+            column.appendChild(jobElement);
+          });
+
+          schedule.appendChild(column);
+        }
+      }
+
+      function showTooltip(event, job) {
+        const tooltip = document.getElementById("tooltip");
+        tooltip.innerHTML = `
+        <div class="tooltip-header">Customer: ${job.customer}</div>
+        <strong>Time Added:</strong> ${job.added}<br>
+        <strong>Job Address:</strong> ${job.address}<br>
+        <strong>Job Type:</strong> Service Request<br>
+        <strong>Job Status:</strong> Booked<br>
+        <strong>Job Description:</strong> ${job.description}
+      `;
+        tooltip.style.display = "block";
+        tooltip.style.left = `${event.pageX + 10}px`;
+        tooltip.style.top = `${event.pageY + 10}px`;
+      }
+
+      function hideTooltip() {
+        document.getElementById("tooltip").style.display = "none";
+      }
+
+      generateSchedule();
+    </script>
+  </body>
+</html>

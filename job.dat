@@ -1,0 +1,324 @@
+{
+    "jobs": {
+        "Alice": [
+            {
+                "id": "JB1401",
+                "start": "07:00",
+                "duration": 2,
+                "customer": "Australian Communications & Network Solutions Pty Ltd",
+                "added": "01/02/2025 11:04",
+                "address": "Sydney",
+                "description": "Install a VoIP system, ensuring seamless integration with the existing network. Configure SIP trunks, set up extension groups, and test call routing functionality. Provide training for end-users on system operation and basic troubleshooting procedures."
+            },
+            {
+                "id": "JB1402",
+                "start": "09:00",
+                "duration": 3,
+                "customer": "Metropolitan Infrastructure Services Group",
+                "added": "02/02/2025 14:20",
+                "address": "Melbourne",
+                "description": "Repair network switch by diagnosing port failures and replacing damaged components. Verify VLAN configurations and ensure redundancy for critical systems. Conduct post-repair tests to confirm network stability before closing the job."
+            },
+            {
+                "id": "JB1415",
+                "start": "13:00",
+                "duration": 2,
+                "customer": "Integrated Business Technologies International",
+                "added": "11/02/2025 13:20",
+                "address": "Brisbane",
+                "description": "Perform a comprehensive network security audit, identifying potential vulnerabilities. Conduct penetration testing, assess firewall configurations, and verify access control policies. Provide recommendations to enhance security and protect sensitive data from external threats."
+            }
+        ],
+        "Bob": [
+            {
+                "id": "JB1403",
+                "start": "11:00",
+                "duration": 1,
+                "customer": "Queensland Healthcare Information Systems Ltd",
+                "added": "03/02/2025 09:15",
+                "address": "Brisbane",
+                "description": "Replace a damaged fibre-optic cable to restore high-speed connectivity. Conduct signal testing before and after replacement to ensure optimal performance. Coordinate with IT staff to minimize downtime for critical healthcare applications."
+            }
+        ],
+        "Charlie": [
+            {
+                "id": "JB1405",
+                "start": "10:00",
+                "duration": 2,
+                "customer": "Southern Cross Digital Infrastructure Solutions",
+                "added": "05/02/2025 10:30",
+                "address": "Adelaide",
+                "description": "Upgrade PBX system to support advanced call management features, including IVR and voicemail-to-email. Migrate existing configurations, test call routing rules, and ensure system stability post-upgrade."
+            },
+            {
+                "id": "JB1406",
+                "start": "13:00",
+                "duration": 2,
+                "customer": "Enterprise Data Management Associates Pty Ltd",
+                "added": "06/02/2025 15:30",
+                "address": "Melbourne",
+                "description": "Conduct server maintenance, including system updates, disk cleanups, and hardware diagnostics. Optimize server performance by fine-tuning resource allocations and removing obsolete services."
+            },
+            {
+                "id": "JB1416",
+                "start": "15:30",
+                "duration": 2,
+                "customer": "Sigma Corp",
+                "added": "12/02/2025 09:15",
+                "address": "Perth",
+                "description": "Optimize database performance by analyzing query execution times and indexing frequently accessed tables. Identify and resolve slow-running transactions, ensuring efficient data retrieval for business operations."
+            },
+            {
+                "id": "JB1417",
+                "start": "08:00",
+                "duration": 1,
+                "customer": "Phi Solutions",
+                "added": "13/02/2025 11:45",
+                "address": "Sydney",
+                "description": "Perform hardware diagnostics on critical network infrastructure, testing power supplies, cooling systems, and component integrity. Report any issues and recommend replacements if necessary."
+            }
+        ],
+        "Diana": [
+            {
+                "id": "JB1407",
+                "start": "14:30",
+                "duration": 3,
+                "customer": "Eta Corp",
+                "added": "07/02/2025 12:00",
+                "address": "Sydney",
+                "description": "Recover lost data from a failed backup system by restoring files from secondary storage. Validate data integrity, reconfigure automated backup schedules, and implement redundancy measures to prevent future data loss."
+            },
+            {
+                "id": "JB1408",
+                "start": "16:00",
+                "duration": 1,
+                "customer": "Theta Solutions",
+                "added": "08/02/2025 09:50",
+                "address": "Brisbane",
+                "description": "Configure and deploy a new firewall system to enhance network security. Set up access control rules, monitor traffic patterns, and test intrusion prevention mechanisms."
+            }
+        ],
+        "Ethan": [
+            {
+                "id": "JB1409",
+                "start": "17:00",
+                "duration": 2,
+                "customer": "Iota Services",
+                "added": "09/02/2025 14:10",
+                "address": "Perth",
+                "description": "Conduct a comprehensive system security audit, reviewing access logs, password policies, and network encryption. Provide recommendations to strengthen security against emerging cyber threats."
+            },
+            {
+                "id": "JB1410",
+                "start": "08:30",
+                "duration": 2,
+                "customer": "Lambda Tech",
+                "added": "10/02/2025 08:45",
+                "address": "Melbourne",
+                "description": "Set up a cloud backup solution for mission-critical data, ensuring seamless replication and recovery options. Configure encryption settings and test backup integrity."
+            },
+            {
+                "id": "JB1418",
+                "start": "11:00",
+                "duration": 3,
+                "customer": "Rho Technologies",
+                "added": "14/02/2025 10:30",
+                "address": "Adelaide",
+                "description": "Perform maintenance on the server room, including cooling system checks, cable management improvements, and rack stability testing. Ensure optimal environmental conditions for hardware longevity."
+            }
+        ],
+        "Fiona": [
+            {
+                "id": "JB1411",
+                "start": "09:30",
+                "duration": 4,
+                "customer": "Kappa Industries",
+                "added": "15/02/2025 08:20",
+                "address": "Sydney",
+                "description": "Upgrade the entire network infrastructure, replacing legacy switches with high-performance models. Implement VLAN segmentation, ensure redundancy, and optimize bandwidth allocation for better performance."
+            },
+            {
+                "id": "JB1412",
+                "start": "14:00",
+                "duration": 2,
+                "customer": "Nu Solutions",
+                "added": "16/02/2025 13:40",
+                "address": "Melbourne",
+                "description": "Optimize wireless network coverage by adjusting access point placement, reducing interference, and fine-tuning signal strength to eliminate dead zones."
+            }
+        ],
+        "George": [
+            {
+                "id": "JB1413",
+                "start": "08:00",
+                "duration": 5,
+                "customer": "Xi Corp",
+                "added": "17/02/2025 09:10",
+                "address": "Brisbane",
+                "description": "Execute a full-scale data center migration, ensuring minimal downtime and seamless transition. Migrate virtual machines, update IP configurations, and verify storage integration."
+            }
+        ],
+        "Hannah": [
+            {
+                "id": "JB1414",
+                "start": "10:00",
+                "duration": 3,
+                "customer": "Mu Systems",
+                "added": "18/02/2025 11:25",
+                "address": "Perth",
+                "description": "Install a new security system, including CCTV cameras, biometric access control, and intrusion detection sensors. Test each component for proper functionality."
+            },
+            {
+                "id": "JB1419",
+                "start": "14:00",
+                "duration": 2,
+                "customer": "Pi Technologies",
+                "added": "19/02/2025 15:30",
+                "address": "Adelaide",
+                "description": "Deploy and configure enterprise software, including user role assignments, security settings, and performance optimizations. Provide training on system usage."
+            },
+            {
+                "id": "JB1420",
+                "start": "16:30",
+                "duration": 1,
+                "customer": "Chi Solutions",
+                "added": "20/02/2025 12:15",
+                "address": "Sydney",
+                "description": "Perform scheduled hardware maintenance, cleaning components, updating firmware, and testing system stability for critical infrastructure devices."
+            }
+        ],
+        "Isaac": [
+            {
+                "id": "JB1421",
+                "start": "09:00",
+                "duration": 3,
+                "customer": "Upsilon Corp",
+                "added": "21/02/2025 08:45",
+                "address": "Melbourne",
+                "description": "Troubleshoot network issues affecting multiple departments, performing diagnostics on switches, routers, and firewall configurations. Implement corrective actions and document findings."
+            },
+            {
+                "id": "JB1422",
+                "start": "13:00",
+                "duration": 2,
+                "customer": "Tau Industries",
+                "added": "22/02/2025 10:20",
+                "address": "Brisbane",
+                "description": "Upgrade system hardware and software to enhance processing speed and reliability. Replace outdated components, install patches, and verify stability post-upgrade."
+            }
+        ],
+        "Jack": [
+            {
+                "id": "JB1423",
+                "start": "10:00",
+                "duration": 3,
+                "customer": "Omicron Enterprises",
+                "added": "23/02/2025 11:30",
+                "address": "Sydney",
+                "description": "Configure a secure VPN setup for remote employees, ensuring encrypted access and role-based authentication. Test connectivity and provide usage training."
+            }
+        ],
+        "Kelly": [
+            {
+                "id": "JB1424",
+                "start": "14:00",
+                "duration": 2,
+                "customer": "Sigma Solutions",
+                "added": "24/02/2025 09:50",
+                "address": "Melbourne",
+                "description": "Implement an endpoint security solution across multiple devices, deploying antivirus and intrusion prevention systems. Configure automated security updates."
+            }
+        ],
+        "Liam": [
+            {
+                "id": "JB1425",
+                "start": "08:30",
+                "duration": 4,
+                "customer": "Delta Networks",
+                "added": "25/02/2025 13:10",
+                "address": "Brisbane",
+                "description": "Install and configure a cloud-based file sharing solution for enhanced team collaboration. Ensure access controls are in place and test sync functionality."
+            }
+        ],
+        "Mia": [
+            {
+                "id": "JB1426",
+                "start": "11:00",
+                "duration": 2,
+                "customer": "Omega IT Services",
+                "added": "26/02/2025 10:40",
+                "address": "Perth",
+                "description": "Upgrade outdated software across multiple workstations, ensuring compatibility and security compliance. Verify correct licensing and post-update stability."
+            }
+        ],
+        "Nathan": [
+            {
+                "id": "JB1427",
+                "start": "09:00",
+                "duration": 3,
+                "customer": "Epsilon Digital Solutions",
+                "added": "27/02/2025 15:25",
+                "address": "Adelaide",
+                "description": "Conduct structured cabling installation, terminating and testing Ethernet connections for a new office setup. Label and document cabling routes."
+            }
+        ],
+        "Olivia": [
+            {
+                "id": "JB1428",
+                "start": "13:30",
+                "duration": 2,
+                "customer": "Zeta Communications",
+                "added": "28/02/2025 12:35",
+                "address": "Melbourne",
+                "description": "Configure load balancing for a high-traffic web server, optimizing performance and redundancy. Conduct stress tests to validate system resilience."
+            }
+        ],
+        "Patrick": [
+            {
+                "id": "JB1429",
+                "start": "15:00",
+                "duration": 3,
+                "customer": "Beta Technologies",
+                "added": "01/03/2025 08:55",
+                "address": "Sydney",
+                "description": "Set up a disaster recovery plan, including cloud backups, failover solutions, and automated restoration procedures. Conduct drills to test effectiveness."
+            }
+        ],
+        "Quinn": [
+            {
+                "id": "JB1430",
+                "start": "09:30",
+                "duration": 2,
+                "customer": "Alpha Innovations",
+                "added": "02/03/2025 14:45",
+                "address": "Brisbane",
+                "description": "Optimize database queries and implement caching strategies to improve application performance. Monitor query execution and identify bottlenecks."
+            }
+        ]
+    },
+    "techColors": {
+        "Alice": "#FFB3BA",
+        "Bob": "#BAFFC9",
+        "Charlie": "#BAE1FF",
+        "Diana": "#FFFFBA",
+        "Ethan": "#FFD9BA",
+        "Fiona": "#D8BAFF",
+        "George": "#BAFFE2",
+        "Hannah": "#FFBAF0",
+        "Isaac": "#C5C5C5",
+        "Jack": "#FFC0CB",
+        "Kelly": "#8EC0E4",
+        "Liam": "#F4A460",
+        "Mia": "#98FB98",
+        "Nathan": "#B0C4DE",
+        "Olivia": "#FFD700",
+        "Patrick": "#CD5C5C",
+        "Quinn": "#FF69B4"
+    },
+    "fullTechList": [
+        "Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah", "Isaac", "Jack", "Kelly", "Liam", "Mia", "Nathan", "Olivia", "Patrick", "Quinn", "Unallocated"
+    ],
+    "shortTechList": [
+        "Alice", "Bob", "Charlie", "Diana", "Unallocated"
+    ]
+}

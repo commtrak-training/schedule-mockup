@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar View</title>
+    <style>
+        /* Reuse the same side menu and base styles from index.html */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .side-menu {
+            width: 200px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 10px 0;
+            flex-shrink: 0;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .menu-item {
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            color: #1a237e;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .menu-item:hover {
+            background: #e9ecef;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-x: auto;
+            min-width: 0;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Calendar-specific styles */
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            min-width: 1000px;
+        }
+
+        .calendar-day {
+            border: 1px solid #ddd;
+            min-height: 120px;
+            background: #fff;
+            padding: 5px;
+        }
+
+        .calendar-day-header {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin: -5px -5px 5px -5px;
+        }
+
+        .calendar-job {
+            background: #dce6f1;
+            padding: 3px;
+            margin: 2px 0;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f4f4f4;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-nav button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+        }
+
+        .calendar-day.drag-over {
+            background: #f0f0f0;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .month-container {
+            margin-bottom: 20px;
+        }
+
+        .month-title {
+            padding: 10px;
+            background: #e0e0e0;
+            margin-bottom: 5px;
+        }
+
+        .calendar-months {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .calendar-header-row {
+            display: contents;
+            /* This makes the children become grid items */
+        }
+
+        .calendar-header-row div {
+            background: #e8eaf6;
+            /* Light blue background */
+            color: #1a237e;
+            /* Dark blue text */
+            padding: 8px 0;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #1a237e;
+            /* Dark border for separation */
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="side-menu">
+        <!-- Reuse the same side menu from index.html -->
+        <a href="index.html" class="menu-item">
+            <i>📅</i>Schedule View
+        </a>
+        <a href="calendar.html" class="menu-item">
+            <i>📅</i>Calendar View
+        </a>
+        <hr>
+        <!-- Include all other menu items from index.html -->
+    </div>
+
+    <div class="main-content">
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button onclick="changeMonth(-1)">◀</button>
+                <span id="current-month"></span>
+                <button onclick="changeMonth(1)">▶</button>
+            </div>
+            <div class="controls">
+                <label>
+                    <input type="checkbox" id="showPrevMonth">
+                    Display previous month
+                </label>
+                <label>
+                    <input type="checkbox" id="showNextMonth">
+                    Display next month
+                </label>
+                <label>
+                    <input type="checkbox" id="showDetail" checked>
+                    Show job details
+                </label>
+            </div>
+        </div>
+        <div class="calendar-months" id="calendar"></div>
+    </div>
+
+    <script>
+        let currentDate = new Date('2025-02-01'); // Starting from Feb 2025 to match sample data
+        let showJobDetail = true;
+        let showPrevMonth = false;
+        let showNextMonth = false;
+
+        // Remove the existing jobs and techColors definitions and replace with:
+        let jobs = {};
+        let techColors = {};
+
+        fetch('job.dat')
+            .then(response => response.json())
+            .then(data => {
+                jobs = data.jobs;
+                techColors = data.techColors;
+                generateCalendar();
+            })
+            .catch(error => console.error('Error loading job data:', error));
+
+        // Add drag and drop functionality
+        function handleDragStart(event) {
+            const jobId = event.target.dataset.jobId;
+            const sourceDate = event.target.closest('.calendar-day').dataset.isoDate;
+            event.dataTransfer.setData('text/plain', JSON.stringify({
+                jobId: jobId,
+                sourceDate: sourceDate
+            }));
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            event.target.closest('.calendar-day').classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.target.closest('.calendar-day').classList.remove('drag-over');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const calendarDay = event.currentTarget;
+            calendarDay.classList.remove('drag-over');
+
+            const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            const targetDate = calendarDay.dataset.isoDate;
+
+            if (data.sourceDate === targetDate) return;
+
+            // Find the job in the original date
+            const [technician, jobIndex] = findJobById(data.jobId);
+
+            if (technician) {
+                // Update job's added date to match new day
+                const [year, month, day] = targetDate.split('-');
+                jobs[technician][jobIndex].added =
+                    `${day}/${month}/${year} ${jobs[technician][jobIndex].added.split(' ')[1]}`;
+
+                generateCalendar();
+            }
+        }
+
+        function findJobById(jobId) {
+            for (const [tech, techJobs] of Object.entries(jobs)) {
+                const index = techJobs.findIndex(job => job.id === jobId);
+                if (index > -1) return [tech, index];
+            }
+            return [null, -1];
+        }
+
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            const monthsToShow = [];
+            if (showPrevMonth) monthsToShow.push(-1);
+            monthsToShow.push(0);
+            if (showNextMonth) monthsToShow.push(1);
+
+            // Add this variable to track multi-month display
+            const isMultiMonth = monthsToShow.length > 1;
+
+            monthsToShow.forEach(monthOffset => {
+                const monthDate = new Date(currentDate);
+                monthDate.setMonth(monthDate.getMonth() + monthOffset);
+
+                const year = monthDate.getFullYear();
+                const month = monthDate.getMonth();
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+
+                // Calculate weeks needed (dynamic row count)
+                const daysInMonth = lastDay.getDate();
+                const startDay = firstDay.getDay() || 7; // 1 (Mon) to 7 (Sun)
+                const totalDays = startDay - 1 + daysInMonth;
+                const weeksNeeded = Math.ceil(totalDays / 7);
+
+                // Calculate grid dates
+                const gridStart = new Date(year, month, 1);
+                gridStart.setDate(1 - (gridStart.getDay() || 7) + 1); // Start on Monday of the week containing 1st
+
+                // Calculate end date differently for multi-month
+                const gridDates = Array.from({ length: weeksNeeded * 7 }, (_, i) => {
+                    const date = new Date(gridStart);
+                    date.setDate(date.getDate() + i);
+                    return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+                });
+
+                // Create month container
+                const monthContainer = document.createElement('div');
+                monthContainer.className = 'month-container';
+
+                // Add month title
+                const monthTitle = document.createElement('div');
+                monthTitle.className = 'month-title';
+                monthTitle.textContent = monthDate.toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+                monthContainer.appendChild(monthTitle);
+
+                // Create calendar grid
+                const monthGrid = document.createElement('div');
+                monthGrid.className = 'calendar-container';
+
+                // Add weekday header row
+                const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const headerRow = document.createElement('div');
+                headerRow.className = 'calendar-header-row';
+                weekdays.forEach(day => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.textContent = day;
+                    headerRow.appendChild(dayDiv);
+                });
+                monthGrid.appendChild(headerRow);
+
+                gridDates.forEach(date => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'calendar-day';
+
+                    // Modified current month check
+                    const isCurrentMonth = date.getMonth() === month;
+                    const isEmptyCell = isMultiMonth && !isCurrentMonth;
+
+                    if (isEmptyCell) {
+                        dayDiv.style.visibility = 'hidden';
+                        dayDiv.style.border = 'none';
+                    } else if (!isCurrentMonth) {
+                        dayDiv.style.background = '#f8f8f8';
+                        dayDiv.style.opacity = '0.7';
+                    }
+
+                    if (!isEmptyCell) {
+                        const dayNumber = date.getDate();
+                        const isoDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                        dayDiv.dataset.isoDate = isoDate;
+
+                        // Format date string for job matching
+                        const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+
+                        dayDiv.innerHTML = `
+                            <div class="calendar-day-header">${dayNumber}</div>
+                            ${getJobsForDate(formattedDate).map(job => `
+                                <div class="calendar-job" 
+                                     style="background: ${techColors[job.technician] || '#dce6f1'}"
+                                     data-job-id="${job.id}"
+                                     draggable="true"
+                                     ondragstart="handleDragStart(event)">
+                                    <div><strong>${job.technician}</strong> - ${job.id} @${job.start}</div>
+                                    ${showJobDetail ? `
+                                        <div>${job.customer}</div>
+                                        <div style="font-style:italic">${job.description.substring(0, 30)}...</div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        `;
+                    }
+
+                    // Add event listeners
+                    dayDiv.addEventListener('dragover', handleDragOver);
+                    dayDiv.addEventListener('dragleave', handleDragLeave);
+                    dayDiv.addEventListener('drop', handleDrop);
+
+                    monthGrid.appendChild(dayDiv);
+                });
+
+                monthContainer.appendChild(monthGrid);
+                calendar.appendChild(monthContainer);
+            });
+        }
+
+        function getJobsForDate(dateString) {
+            // Convert date string from DD/MM/YYYY to the format used in jobs data
+            const [day, month, year] = dateString.split('/');
+            const searchDate = `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year} `;
+
+            // Find all jobs matching this date with technician info
+            const allJobs = Object.entries(jobs).flatMap(([tech, techJobs]) =>
+                techJobs.map(job => ({ ...job, technician: tech }))
+            );
+            return allJobs.filter(job => job.added.startsWith(searchDate));
+        }
+
+        function changeMonth(offset) {
+            currentDate.setMonth(currentDate.getMonth() + offset);
+            generateCalendar();
+        }
+
+        // Event listeners
+        document.getElementById('showDetail').addEventListener('change', function (e) {
+            showJobDetail = e.target.checked;
+            generateCalendar();
+        });
+
+        document.getElementById('showPrevMonth').addEventListener('change', function (e) {
+            showPrevMonth = e.target.checked;
+            generateCalendar();
+        });
+
+        document.getElementById('showNextMonth').addEventListener('change', function (e) {
+            showNextMonth = e.target.checked;
+            generateCalendar();
+        });
+
+        // Initial generation
+        generateCalendar();
+    </script>
+</body>
+
+</html>
