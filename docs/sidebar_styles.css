@@ -1,0 +1,51 @@
+/* Reset body defaults */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+}
+
+.side-menu {
+  width: 200px;
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  padding: 10px 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.menu-item i {
+  font-size: 2em;
+  width: 32px;
+  text-align: center;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+.side-menu hr {
+  margin: 10px 0;
+  border-top: 1px solid #dee2e6;
+  border-bottom: none;
+}
+
+/* Main content positioning */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}

@@ -6,228 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar View</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        /* Reuse the same side menu and base styles from index.html */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .side-menu {
-            width: 200px;
-            background: #f8f9fa;
-            border-right: 1px solid #dee2e6;
-            padding: 10px 0;
-            flex-shrink: 0;
-            overflow-y: auto;
-            height: 100%;
-        }
-
-        .menu-item {
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            color: #1a237e;
-            text-decoration: none;
-            font-size: 13px;
-        }
-
-        .menu-item:hover {
-            background: #e9ecef;
-        }
-
-        .main-content {
-            flex: 1;
-            overflow-x: auto;
-            min-width: 0;
-            padding: 10px;
-            height: 100%;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        /* Calendar-specific styles */
-        .calendar-container {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            min-width: 1000px;
-        }
-
-        .calendar-day {
-            border: 1px solid #ddd;
-            min-height: 120px;
-            background: #fff;
-            padding: 5px;
-        }
-
-        .calendar-day-header {
-            background: #2c3e50;
-            color: white;
-            padding: 5px;
-            text-align: center;
-            font-weight: bold;
-            margin: -5px -5px 5px -5px;
-        }
-
-        .calendar-job {
-            background: #dce6f1;
-            padding: 3px;
-            margin: 2px 0;
-            border-radius: 3px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #f4f4f4;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .calendar-nav button {
-            padding: 5px 10px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
-        .controls {
-            margin-bottom: 10px;
-        }
-
-        .calendar-day.drag-over {
-            background: #f0f0f0;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .month-container {
-            margin-bottom: 20px;
-        }
-
-        .month-title {
-            padding: 10px;
-            background: #e0e0e0;
-            margin-bottom: 5px;
-        }
-
-        .calendar-months {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .calendar-header-row {
-            display: contents;
-            /* This makes the children become grid items */
-        }
-
-        .calendar-header-row div {
-            background: #e8eaf6;
-            /* Light blue background */
-            color: #1a237e;
-            /* Dark blue text */
-            padding: 8px 0;
-            font-weight: bold;
-            text-align: center;
-            border-bottom: 2px solid #1a237e;
-            /* Dark border for separation */
-            font-size: 13px;
-        }
-    </style>
+    <link rel="stylesheet" href="sidebar_styles.css">
+    <link rel="stylesheet" href="calendar_styles.css">
 </head>
 
 <body>
-    <div class="side-menu">
-        <a href="#" class="menu-item">
-            <i class="fas fa-home"></i>Home
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-cog"></i>Settings
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-chart-line"></i>Leads
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-box"></i>Inventory
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-chart-bar"></i>Reports
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-briefcase"></i>Jobs
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-mobile-alt"></i>Mobile View
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-ticket-alt"></i>Tickets
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-phone"></i>CallTrak
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-chart-pie"></i>Sales Dashboard
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-users"></i>Customers
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-sync"></i>Workflow
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-project-diagram"></i>Projects
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-inbox"></i>Incoming Documents
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-tags"></i>Price Check
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-file-alt"></i>Documents
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-calendar"></i>Calendar
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-tools"></i>Utilities
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-calendar-alt"></i>Schedule
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-tasks"></i>To-Do
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-tachometer-alt"></i>Tickets Dashboard
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-clock"></i>Timesheets
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-desktop"></i>Conference Mode
-        </a>
-        <hr style="margin: 10px 0; border-top: 1px solid #dee2e6;">
-        <a href="#" class="menu-item">
-            <i class="fas fa-question-circle"></i>Support Centre
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-info-circle"></i>Help With This Page
-        </a>
-    </div>
-
+    <div id="sidebar-container"></div>
     <div class="main-content">
         <div class="calendar-header">
             <div class="calendar-nav">
@@ -257,6 +41,13 @@
     </div>
 
     <script>
+        // Load the sidebar
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-container').innerHTML = html;
+            });
+
         let currentDate = new Date('2025-02-01'); // Starting from Feb 2025 to match sample data
         let showJobDetail = true;
         let showPrevMonth = false;

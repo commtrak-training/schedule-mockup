@@ -1,0 +1,112 @@
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  overflow-x: auto;
+  min-width: 0;
+  padding: 10px;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Calendar-specific styles */
+.calendar-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  min-width: 1000px;
+}
+
+.calendar-day {
+  border: 1px solid #ddd;
+  min-height: 120px;
+  background: #fff;
+  padding: 5px;
+}
+
+.calendar-day-header {
+  background: #2c3e50;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  margin: -5px -5px 5px -5px;
+}
+
+.calendar-job {
+  background: #dce6f1;
+  padding: 3px;
+  margin: 2px 0;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-nav button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.controls {
+  margin-bottom: 10px;
+}
+
+.calendar-day.drag-over {
+  background: #f0f0f0;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.month-container {
+  margin-bottom: 20px;
+}
+
+.month-title {
+  padding: 10px;
+  background: #e0e0e0;
+  margin-bottom: 5px;
+}
+
+.calendar-months {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calendar-header-row {
+  display: contents;
+}
+
+.calendar-header-row div {
+  background: #e8eaf6;
+  color: #1a237e;
+  padding: 8px 0;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 2px solid #1a237e;
+  font-size: 13px;
+}
